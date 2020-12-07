@@ -1,7 +1,3 @@
-"""A graphical user interface (GUI) for the game of Hog.
-
-This file uses many features of Python not yet covered in the course.
-"""
 
 from tkinter import *
 import argparse
