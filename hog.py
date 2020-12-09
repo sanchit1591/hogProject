@@ -6,7 +6,7 @@ from ucb import main, trace, interact
 GOAL_SCORE = 100  # The goal of Hog is to score 100 points.
 
 ######################
-# Phase 1: Simulator #
+# Simulator #
 ######################
 
 
@@ -21,7 +21,6 @@ def roll_dice(num_rolls, dice=six_sided):
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
 
-    # BEGIN PROBLEM 1
     score = 0
     ispig_out = False
     while num_rolls != 0:
@@ -35,8 +34,6 @@ def roll_dice(num_rolls, dice=six_sided):
     else:
         return score
 
-    # END PROBLEM 1
-
 
 def free_bacon(score):
     """Return the points scored from rolling 0 dice (Free Bacon).
@@ -44,11 +41,9 @@ def free_bacon(score):
     score:  The opponent's current score.
     """
     assert score < 100, 'The game should be over.'
-    # BEGIN PROBLEM 2
     digit1 = score % 10
     digit2 = score // 10
     return 10 - min(digit1,digit2)
-    # END PROBLEM 2
 
 
 def take_turn(num_rolls, opponent_score, dice=six_sided):
@@ -64,14 +59,13 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls >= 0, 'Cannot roll a negative number of dice in take_turn.'
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
-    # BEGIN PROBLEM 3
     if num_rolls == 0:
         score = free_bacon(opponent_score)
     else:
         score = roll_dice(num_rolls,dice)
     return score
 
-    # END PROBLEM 3
+
 
 def leftmost(score):
     while score >= 10:
@@ -82,7 +76,6 @@ def is_swap(player_score, opponent_score):
     """
     Return whether the two scores should be swapped
     """
-    # BEGIN PROBLEM 4
     r_digit_player = player_score % 10
     r_digit_opponent = opponent_score % 10
     l_digit_player = leftmost(player_score)
@@ -94,7 +87,6 @@ def is_swap(player_score, opponent_score):
         return False
 
 
-    # END PROBLEM 4
 
 
 def other(player):
@@ -132,7 +124,6 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     feral_hogs: A boolean indicating whether the feral hogs rule should be active.
     """
     player = 0  # Which player is about to take a turn, 0 (first) or 1 (second)
-    # BEGIN PROBLEM 5
     roll0_prev = 0 
     roll1_prev = 0
     roll0 = 0
@@ -152,9 +143,7 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
             score1 = temp
         if score0 >= goal or score1 >= goal:
             gameover = True
-    # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
-    # BEGIN PROBLEM 6
         if feral_hogs == True:
             if player == 0 and (abs(roll0 - roll0_prev) == 2):
                 score0 += 3
@@ -165,12 +154,11 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
         roll1_prev = roll1
         c_func = c_func(score0, score1)
         player = other(player)
-    # END PROBLEM 6
     return score0, score1
 
 
 #######################
-# Phase 2: Commentary #
+# Commentary #
 #######################
 
 
@@ -249,7 +237,6 @@ def announce_highest(who, previous_high=0, previous_score=0):
     55 point(s)! That's the biggest gain yet for Player 1
     """
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
-    # BEGIN PROBLEM 7
     def say1(score0, score1):
         if who == 0:
             if (score0 - previous_score) > previous_high:
@@ -265,11 +252,10 @@ def announce_highest(who, previous_high=0, previous_score=0):
                 return announce_highest(1, previous_high, score1)
     return say1 
 
-    # END PROBLEM 7
 
 
 #######################
-# Phase 3: Strategies #
+# Strategies #
 #######################
 
 
@@ -302,7 +288,6 @@ def make_averaged(fn, num_samples=1000):
     >>> averaged_dice()
     3.0
     """
-    # BEGIN PROBLEM 8
     def average_value(*args):
         total , i = 0 , 0
         while i < num_samples:
@@ -310,7 +295,6 @@ def make_averaged(fn, num_samples=1000):
         return total/num_samples
     return average_value
             
-    # END PROBLEM 8
 
 
 def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
@@ -322,7 +306,6 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     >>> max_scoring_num_rolls(dice)
     1
     """
-    # BEGIN PROBLEM 9
     highest , i = 0 , 1
     r_val = 1
     current = 0
@@ -335,7 +318,6 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     	i += 1
     return r_val
 
-    # END PROBLEM 9
 
 
 def winner(strategy0, strategy1):
@@ -382,13 +364,11 @@ def bacon_strategy(score, opponent_score, margin=8, num_rolls=4):
     """This strategy rolls 0 dice if that gives at least MARGIN points, and
     rolls NUM_ROLLS otherwise.
     """
-    # BEGIN PROBLEM 10
     if free_bacon(opponent_score) >= margin:
     	return 0
     else:
     	return num_rolls
 
-    # END PROBLEM 10
 
 
 def swap_strategy(score, opponent_score, margin=8, num_rolls=4):
@@ -396,14 +376,12 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=4):
     rolls 0 dice if it gives at least MARGIN points and does not trigger a
     non-beneficial swap. Otherwise, it rolls NUM_ROLLS.
     """
-    # BEGIN PROBLEM 11
     if is_swap(score + free_bacon(opponent_score) , opponent_score) and (opponent_score > score + free_bacon(opponent_score)):
     	return 0
     elif (free_bacon(opponent_score) >= margin) and ((not is_swap(score + free_bacon(opponent_score) , opponent_score)) or (score + free_bacon(opponent_score) == opponent_score)):
     	return 0
     else:
     	return num_rolls
-    # END PROBLEM 11
 
 
 def final_strategy(score, opponent_score):
@@ -411,9 +389,7 @@ def final_strategy(score, opponent_score):
 
     *** YOUR DESCRIPTION HERE ***
     """
-    # BEGIN PROBLEM 12
     return 4  # Replace this statement
-    # END PROBLEM 12
 
 ##########################
 # Command Line Interface #
