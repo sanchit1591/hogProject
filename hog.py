@@ -385,9 +385,9 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=4):
 
 
 def final_strategy(score, opponent_score):
-    """Write a brief description of your final strategy.
+    """This strategy is in progress
 
-    *** YOUR DESCRIPTION HERE ***
+    *** In Progress ***
     """
     return 4  # Replace this statement
 
